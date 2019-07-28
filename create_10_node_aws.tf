@@ -1,4 +1,5 @@
 # declaring the provider with the region
+
 provider "aws" {
   region = "us-west-2"
 }
@@ -7,8 +8,9 @@ provider "aws" {
 # ami- is the EC2 AMI, you can get it from AWS console
 # count- number of instance, you want to create
 # instance_type-type of the instance
+
 resource "aws_instance" "example" {
-  count=0
-  ami           = "ami-0f2176987ee50226e"
+  count = 0
+  ami = "ami-0f2176987ee50226e"
   instance_type = "t2.micro"
 }
