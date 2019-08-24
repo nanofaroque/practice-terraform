@@ -1,2 +1,6 @@
 .idea
 .terraform
+*.tfstate
+*.tfstate.backup
+/chapter_2/*.tfstate
+/chapter_2/*.tfstate.backup
