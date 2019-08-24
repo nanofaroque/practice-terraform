@@ -4,7 +4,8 @@ resource "aws_security_group" "instance" {
     from_port = 8080
     protocol = "tcp"
     to_port = 8080
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = [
+      "0.0.0.0/0"]
   }
   tags = {
     Name = "instance_security"
@@ -20,7 +21,7 @@ resource "aws_instance" "single_server" {
               EOF
 
   //add a name of the instance
-  tags =  {
+  tags = {
     Name = "terraform_single_server"
   }
 }
