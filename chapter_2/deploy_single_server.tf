@@ -7,22 +7,43 @@ resource "aws_security_group" "instance" {
     cidr_blocks = [
       "0.0.0.0/0"]
   }
+  lifecycle {
+    create_before_destroy = true
+  }
   tags = {
     Name = "instance_security"
   }
 }
-resource "aws_instance" "single_server" {
-  ami = "ami-40d28157"
+resource "aws_launch_configuration" "example" {
+  image_id = "ami-40d28157"
   instance_type = "t2.micro"
-  vpc_security_group_ids = [aws_security_group.instance.id]
+  security_groups = [
+    aws_security_group.instance.id]
   user_data = <<-EOF
               #!/bin/bash
               echo "Hello World" > index.html
               nohup busybox httpd -f -p "${var.server_port}" &
               EOF
 
-  //add a name of the instance
-  tags = {
-    Name = "terraform_single_server"
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+data "aws_availability_zones" "all" {}
+// create an auto scaling group(ASG)
+resource "aws_autoscaling_group" "example" {
+  launch_configuration = aws_launch_configuration.example.id
+  availability_zones = [
+    "us-east-1a",
+    "us-east-1b"]
+  load_balancers = [
+    aws_elb.example.name]
+  health_check_type = "ELB"
+  max_size = 10
+  min_size = 2
+  tag {
+    key = "Name"
+    propagate_at_launch = true
+    value = "terraform-asg-example"
   }
 }
